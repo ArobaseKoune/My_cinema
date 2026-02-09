@@ -491,6 +491,7 @@ function resetForm(formId) {
 
 function showAlert(alertId, message, type) {
     const alertDiv = document.getElementById(alertId);
+    if (!alertDiv) return;
     alertDiv.className = `alert alert-${type}`;
     alertDiv.textContent = message;
     alertDiv.style.display = 'block';
@@ -510,5 +511,8 @@ function hideSpinner(spinnerId) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('moviesAlert').style.display = 'none';
+    document.getElementById('roomsAlert').style.display = 'none';
+    document.getElementById('screeningsAlert').style.display = 'none';
     fetchMovies();
 });
