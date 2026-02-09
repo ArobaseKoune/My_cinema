@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Cinema</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-dark py-3 mb-3 ">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1 fs-2">My Cinema</span>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="nav nav-tabs mb-4">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" onclick="switchTab('movies')">Films</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="switchTab('rooms')">Salles</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="switchTab('screenings')">Séances</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="movies-tab" class="tab-pane">
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <div id="moviesAlert"></div>
+                    <button class="btn btn-primary" onclick="showMovieForm()">Ajouter un film</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12" id="moviesSpinner" style="display: none;">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Chargement...</span>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <table id="moviesTable" class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Titre</th>
+                                <th>Genre</th>
+                                <th>Durée</th>
+                                <th>Année</th>
+                                <th>Réalisateur</th>
+                                <th>Créé</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="rooms-tab" class="tab-pane" style="display: none;">
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <div id="roomsAlert"></div>
+                    <button class="btn btn-primary" onclick="showRoomForm()">➕ Ajouter une salle</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12" id="roomsSpinner" style="display: none;">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Chargement...</span>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <table id="roomsTable" class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nom</th>
+                                <th>Type</th>
+                                <th>Capacité</th>
+                                <th>Statut</th>
+                                <th>Créée</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="screenings-tab" class="tab-pane" style="display: none;">
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <div id="screeningsAlert"></div>
+                    <button class="btn btn-primary" onclick="showScreeningForm()">➕ Ajouter une séance</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12" id="screeningsSpinner" style="display: none;">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Chargement...</span>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <table id="screeningsTable" class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Film</th>
+                                <th>Salle</th>
+                                <th>Heure de début</th>
+                                <th>Créée</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="movieModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeMovieModal()">&times;</span>
+            <h2 id="movieFormTitle">Ajouter un film</h2>
+            <form id="movieForm" onsubmit="saveMovie(event)">
+                <input type="hidden" id="movieId">
+                <div class="form-group">
+                    <label>Titre *</label>
+                    <input type="text" id="movieTitle" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="movieDescription" class="form-control"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Durée (minutes) *</label>
+                    <input type="number" id="movieDuration" class="form-control" required min="1">
+                </div>
+                <div class="form-group">
+                    <label>Année de sortie *</label>
+                    <input type="number" id="movieReleaseYear" class="form-control" required min="1900">
+                </div>
+                <div class="form-group">
+                    <label>Genre</label>
+                    <input type="text" id="movieGenre" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Réalisateur</label>
+                    <input type="text" id="movieDirector" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-success">Enregistrer</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="roomModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeRoomModal()">&times;</span>
+            <h2 id="roomFormTitle">Ajouter une salle</h2>
+            <form id="roomForm" onsubmit="saveRoom(event)">
+                <input type="hidden" id="roomId">
+                <div class="form-group">
+                    <label>Nom *</label>
+                    <input type="text" id="roomName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Capacité *</label>
+                    <input type="number" id="roomCapacity" class="form-control" required min="1">
+                </div>
+                <div class="form-group">
+                    <label>Type</label>
+                    <input type="text" id="roomType" class="form-control" placeholder="ex: Standard, IMAX">
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="roomActive" checked>
+                        Actif
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-success">Enregistrer</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="screeningModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeScreeningModal()">&times;</span>
+            <h2 id="screeningFormTitle">Ajouter une séance</h2>
+            <form id="screeningForm" onsubmit="saveScreening(event)">
+                <input type="hidden" id="screeningId">
+                <div class="form-group">
+                    <label>Film *</label>
+                    <select id="screeningMovie" class="form-control" required>
+                        <option value="">-- Sélectionner un film --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Salle *</label>
+                    <select id="screeningRoom" class="form-control" required>
+                        <option value="">-- Sélectionner une salle --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Date et heure *</label>
+                    <input type="datetime-local" id="screeningStartTime" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-success">Enregistrer</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="assets/app.js"></script>
+</body>
+</html>
